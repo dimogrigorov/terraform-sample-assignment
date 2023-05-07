@@ -50,9 +50,8 @@ resource "aws_instance" "my-ec2-instance" {
   vpc_security_group_ids = [aws_security_group.my-assignment-sg.id]
   availability_zone = var.avail_zone
   key_name = aws_key_pair.ssh-key.key_name
-
+  user_data = file("./modules/http_server/docker-script.sh")
   tags = {
     Name: "${var.env_prefix}-ec2"
   }
-  user_data = file("docker-script.sh")
 }
