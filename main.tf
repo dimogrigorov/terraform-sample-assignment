@@ -1,25 +1,3 @@
-variable avail_zone {
-  type = string
-}
-variable vpc_cidr_block {
-  type = string
-}
-variable subnet_cidr_block {
-  type = string
-}
-variable env_prefix {
-  type = string
-}
-variable my_ip {
-  type = string
-}
-variable "instance_type" {
-  type = string
-}
-variable "key-pair" {
-  type = string
-}
-
 provider "aws" {
   region = "eu-west-1"
 }
@@ -101,10 +79,6 @@ data "aws_ami" "latest-amazon-image" {
     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
   }
 }
-
-/*output "aws_ami" {
-  value = data.aws_ami.latest-amazon-image
-}*/
 
 resource "aws_instance" "my-ec2-instance" {
   ami = data.aws_ami.latest-amazon-image.id
