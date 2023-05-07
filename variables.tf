@@ -16,6 +16,9 @@ variable my_ip {
 variable "instance_type" {
   type = string
 }
-variable "key-pair" {
+variable "image_reg_name" {
+  type = string
+}
+variable "public_key_location" {
   type = string
 }

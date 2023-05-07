@@ -20,7 +20,6 @@ resource "aws_route_table_association" "rta" {
   route_table_id = aws_route_table.assignment-vpc-route-table.id
  }
 
-
 resource "aws_route_table" "assignment-vpc-route-table" {
   vpc_id = var.vpc_id
   route {
