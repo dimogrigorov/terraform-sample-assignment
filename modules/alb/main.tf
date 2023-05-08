@@ -29,7 +29,7 @@ resource "aws_lb_listener" "web_server_https_elb_listener" {
 */
 
   ssl_policy         = "ELBSecurityPolicy-2016-08"
-  certificate_arn    = "${data.aws_acm_certificate.my-certificate.arn}"
+  //certificate_arn    = "${data.aws_acm_certificate.my-certificate.arn}"
   default_action {
     target_group_arn = "${aws_lb_target_group.assignment_ec2_targets.arn}"
     type             = "forward"
@@ -50,11 +50,11 @@ resource "aws_lb_target_group" "assignment_ec2_targets" {
   vpc_id      = var.vpc_id
 }
 
-data "aws_acm_certificate" "my-certificate" {
+/*data "aws_acm_certificate" "my-certificate" {
   domain      = "tf.example.com"
   types       = ["AMAZON_ISSUED"]
   most_recent = true
-}
+}*/
 
 data "aws_instances" "webserver_instances" {
   instance_tags = {
@@ -64,7 +64,7 @@ data "aws_instances" "webserver_instances" {
 }
 
 # Request and validate an SSL certificate from AWS Certificate Manager (ACM)
-resource "aws_acm_certificate" "my-certificate" {
+/*resource "aws_acm_certificate" "my-certificate" {
   domain_name       = "example.com"
   validation_method = "DNS"
 
@@ -78,3 +78,4 @@ resource "aws_lb_listener_certificate" "my-certificate" {
   listener_arn = aws_lb_listener.web_server_https_elb_listener.arn
   certificate_arn = aws_acm_certificate.my-certificate.arn
 }
+*/

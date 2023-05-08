@@ -1,4 +1,7 @@
-variable avail_zone {
+variable avail_zone_a {
+  type = string
+}
+variable avail_zone_b {
   type = string
 }
 variable vpc_cidr_block {
@@ -20,6 +23,9 @@ variable "public_key_location" {
   type = string
 }
 variable "public_subnet_cidr_block" {
+  type = string
+}
+variable "public_subnet_cidr_block_b" {
   type = string
 }
 variable "private_subnet_cidr_block" {
