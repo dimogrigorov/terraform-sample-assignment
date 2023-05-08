@@ -1,6 +1,13 @@
 provider "aws" {
   region = "eu-west-1"
 }
+# internet gateway
+resource "aws_internet_gateway" "internet-gw" {
+    vpc_id = aws_vpc.assignment-vpc.id
+    tags = {
+        Name = "internet-gw"
+    }
+}
 
 module "myassignment-private-subnet" {
   source = "./modules/isolated_subnet"
@@ -8,11 +15,11 @@ module "myassignment-private-subnet" {
   avail_zone = var.avail_zone
   env_prefix = var.env_prefix
   vpc_id = aws_vpc.assignment-vpc.id
+  int_gateway_id = aws_internet_gateway.internet-gw.id
   map_public_ip_on_launch = "false"
   name_tag = "private"
-  route_table_id = module.myassignment-public-subnet.public_rt.id
+  route_table_id = module.myassignment-private-subnet.private_rt.id
 }
-
 
 module "myassignment-public-subnet" {
   source = "./modules/isolated_subnet"
@@ -20,6 +27,7 @@ module "myassignment-public-subnet" {
   avail_zone = var.avail_zone
   env_prefix = var.env_prefix
   vpc_id = aws_vpc.assignment-vpc.id
+  int_gateway_id = aws_internet_gateway.internet-gw.id
   map_public_ip_on_launch = "true"
   name_tag = "public"
   route_table_id = module.myassignment-public-subnet.public_rt.id

@@ -15,18 +15,11 @@ resource "aws_route_table" "public-rt" {
     
     route {
         cidr_block = "0.0.0.0/0" 
-        gateway_id = "${aws_internet_gateway.internet-gw.id}" 
+        gateway_id = var.int_gateway_id
     }
     
     tags = {
       Name: "${var.env_prefix}-public-rt"
-    }
-}
-# internet gateway
-resource "aws_internet_gateway" "internet-gw" {
-    vpc_id = var.vpc_id
-    tags = {
-        Name = "internet-gw"
     }
 }
 # Private routes
@@ -35,7 +28,7 @@ resource "aws_route_table" "private-rt" {
     
     route {
         cidr_block = "0.0.0.0/0"
-        nat_gateway_id = "${aws_nat_gateway.nat-gateway.id}" 
+        nat_gateway_id = aws_nat_gateway.nat-gateway.id
     }
     
     tags = {
@@ -49,11 +42,9 @@ resource "aws_eip" "nat_gateway" {
 resource "aws_nat_gateway" "nat-gateway" {
     allocation_id = aws_eip.nat_gateway.id
     subnet_id     = aws_subnet.assignment-subnet.id
-
     # To ensure proper ordering, add Internet Gateway as dependency
-    depends_on = [aws_internet_gateway.internet-gw]
+    //depends_on = [aws_internet_gateway.internet-gw]
 }
-
 resource "aws_route_table_association" "rta" {
   subnet_id = aws_subnet.assignment-subnet.id
   route_table_id = var.route_table_id

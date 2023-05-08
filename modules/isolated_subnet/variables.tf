@@ -19,4 +19,9 @@ variable "route_table_id" {
 variable "name_tag" {
   type = string
 }
-
+variable "int_gateway_id" {
+  type = string
+}
+/*variable "nat_gateway_id" {
+  type = string
+}*/
