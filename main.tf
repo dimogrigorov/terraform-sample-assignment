@@ -1,6 +1,14 @@
 provider "aws" {
   region = "eu-west-1"
 }
+
+resource "aws_vpc" "assignment-vpc" {
+  cidr_block = var.vpc_cidr_block
+  tags = {
+    Name: "${var.env_prefix}-vpc"
+  }
+}
+
 # internet gateway
 resource "aws_internet_gateway" "internet-gw" {
     vpc_id = aws_vpc.assignment-vpc.id
@@ -47,9 +55,9 @@ module "my-assignment-web-server" {
   env_prefix = var.env_prefix
 }
 
-resource "aws_vpc" "assignment-vpc" {
-  cidr_block = var.vpc_cidr_block
-  tags = {
-    Name: "${var.env_prefix}-vpc"
-  }
+module "my-assignment-alb" {
+  source = "./modules/alb"
+  subnet_id = module.myassignment-public-subnet.subnet.id
+  env_prefix = var.env_prefix
+  vpc_id = aws_vpc.assignment-vpc.id
 }
