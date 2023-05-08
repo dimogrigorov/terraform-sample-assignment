@@ -54,5 +54,6 @@ resource "aws_instance" "my-ec2-instance" {
   user_data = file("./modules/http_server/docker-script.sh")
   tags = {
     Name: "${var.env_prefix}-instance${count.index}-ec2"
+    Marker: "MyWebAppInstances"
   }
 }

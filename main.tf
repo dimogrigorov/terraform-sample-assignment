@@ -57,7 +57,7 @@ module "my-assignment-web-server" {
 
 module "my-assignment-alb" {
   source = "./modules/alb"
-  subnet_id = module.myassignment-public-subnet.subnet.id
+  subnets_ids = [module.myassignment-public-subnet.subnet.id]
   env_prefix = var.env_prefix
   vpc_id = aws_vpc.assignment-vpc.id
 }

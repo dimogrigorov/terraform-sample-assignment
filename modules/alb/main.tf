@@ -4,15 +4,15 @@ resource "aws_lb" "assignment-alb" {
   internal           = false
   load_balancer_type = "application"
   //security_groups  = var.my_security_group
-  subnets            = var.subnet_id
+  subnets            = var.subnets_ids
   tags = {
     Name: "${var.env_prefix}-alb"
   }
 }
 
 # Create a listener for the ALB
-resource "aws_alb_listener" "web_server_https_elb_listener" {
-  load_balancer_arn  = "${aws_alb.assignment-alb.arn}"
+resource "aws_lb_listener" "web_server_https_elb_listener" {
+  load_balancer_arn  = "${aws_lb.assignment-alb.arn}"
   port               = "443"
   protocol           = "HTTPS"
 
@@ -37,9 +37,9 @@ resource "aws_alb_listener" "web_server_https_elb_listener" {
 }
 
 resource "aws_alb_target_group_attachment" "tgattachment" {
-  count            = 3
+  count            = length(data.aws_instances.webserver_instances.ids)
   target_group_arn = aws_lb_target_group.assignment_ec2_targets.arn
-  target_id        = element(aws_instance.instance.*.id, count.index)
+  target_id        = element(data.aws_instances.webserver_instances.ids, count.index)
 }
 
 resource "aws_lb_target_group" "assignment_ec2_targets" {
@@ -56,6 +56,13 @@ data "aws_acm_certificate" "my-certificate" {
   most_recent = true
 }
 
+data "aws_instances" "webserver_instances" {
+  instance_tags = {
+     Marker: "MyWebAppInstances"
+  }
+  instance_state_names = ["running"]
+}
+
 # Request and validate an SSL certificate from AWS Certificate Manager (ACM)
 resource "aws_acm_certificate" "my-certificate" {
   domain_name       = "example.com"
@@ -68,6 +75,6 @@ resource "aws_acm_certificate" "my-certificate" {
 
 # Associate the SSL certificate with the ALB listener
 resource "aws_lb_listener_certificate" "my-certificate" {
-  listener_arn = aws_alb_listener.web_server_https_elb_listener.arn
+  listener_arn = aws_lb_listener.web_server_https_elb_listener.arn
   certificate_arn = aws_acm_certificate.my-certificate.arn
 }
