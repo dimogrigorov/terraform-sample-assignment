@@ -4,9 +4,6 @@ variable avail_zone {
 variable vpc_cidr_block {
   type = string
 }
-variable subnet_cidr_block {
-  type = string
-}
 variable env_prefix {
   type = string
 }
@@ -20,5 +17,11 @@ variable "image_reg_name" {
   type = string
 }
 variable "public_key_location" {
+  type = string
+}
+variable "public_subnet_cidr_block" {
+  type = string
+}
+variable "private_subnet_cidr_block" {
   type = string
 }

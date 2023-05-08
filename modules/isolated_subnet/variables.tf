@@ -1,4 +1,4 @@
-variable subnet_cidr_block {
+variable cidr_block {
   type = string
 }
 variable avail_zone {
@@ -10,3 +10,13 @@ variable env_prefix {
 variable "vpc_id" {
   type = string
 }
+variable "map_public_ip_on_launch" {
+  type = string
+}
+variable "route_table_id" {
+  type = string
+}
+variable "name_tag" {
+  type = string
+}
+
