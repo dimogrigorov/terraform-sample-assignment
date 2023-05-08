@@ -28,7 +28,7 @@ module "myassignment-public-subnet" {
 module "my-assignment-web-server" {
   source = "./modules/http_server"
   subnet_id = module.myassignment-private-subnet.subnet.id
-
+  number_of_instances = 3
   public_key_location = var.public_key_location
   image_reg_name = var.image_reg_name
   vpc_id = aws_vpc.assignment-vpc.id

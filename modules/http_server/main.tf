@@ -43,15 +43,16 @@ resource "aws_key_pair" "ssh-key" {
 }
 
 resource "aws_instance" "my-ec2-instance" {
+  count = var.number_of_instances
   ami = data.aws_ami.latest-amazon-image.id
   instance_type = var.instance_type
   subnet_id = var.subnet_id
-  associate_public_ip_address = true
+  //associate_public_ip_address = true
   vpc_security_group_ids = [aws_security_group.my-assignment-sg.id]
   availability_zone = var.avail_zone
   key_name = aws_key_pair.ssh-key.key_name
   user_data = file("./modules/http_server/docker-script.sh")
   tags = {
-    Name: "${var.env_prefix}-ec2"
+    Name: "${var.env_prefix}-instance${count.index}-ec2"
   }
 }

@@ -25,3 +25,6 @@ variable "subnet_id" {
 variable "cidr_block" {
   type = string
 }
+variable "number_of_instances" {
+  type = number
+}
