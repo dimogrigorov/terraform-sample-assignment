@@ -32,7 +32,7 @@ resource "aws_lb_listener" "web_server_https_elb_listener" {
   //certificate_arn    = "${data.aws_acm_certificate.my-certificate.arn}"
   default_action {
     target_group_arn = "${aws_lb_target_group.assignment_ec2_targets.arn}"
-    type             = "forward"
+    type             = "redirect"
   }
 }
 
@@ -64,18 +64,29 @@ data "aws_instances" "webserver_instances" {
 }
 
 # Request and validate an SSL certificate from AWS Certificate Manager (ACM)
-/*resource "aws_acm_certificate" "my-certificate" {
+resource "aws_acm_certificate" "my-certificate" {
   domain_name       = "example.com"
   validation_method = "DNS"
 
   tags = {
     Name = "example.com SSL certificate"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
+/*
+resource "aws_route53_record" "validation" {
+  name    = "${aws_acm_certificate.default.domain_validation_options.0.resource_record_name}"
+  type    = "${aws_acm_certificate.default.domain_validation_options.0.resource_record_type}"
+  zone_id = "${data.aws_route53_zone.external.zone_id}"
+  records = ["${aws_acm_certificate.default.domain_validation_options.0.resource_record_value}"]
+  ttl     = "60"
+}*/
 
 # Associate the SSL certificate with the ALB listener
 resource "aws_lb_listener_certificate" "my-certificate" {
   listener_arn = aws_lb_listener.web_server_https_elb_listener.arn
   certificate_arn = aws_acm_certificate.my-certificate.arn
 }
-*/
